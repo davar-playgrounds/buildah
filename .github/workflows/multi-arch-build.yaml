@@ -2,7 +2,7 @@ name: build multi-arch images
 
 on:
   push:
-    branches: [ master ]
+    branches: [ temp_automation_test ]
   schedule:
   - cron:  '0 8 * * *'
   # allows to run this workflow manually from the Actions tab
@@ -70,15 +70,15 @@ jobs:
           # Names are different for upstream and stable Buildah images
           if [ "${{ matrix.source }}" == "upstream" ]; then
             # quay.io/buildah/upstream:master
-            echo ::set-output name=buildah_tag::"${{ env.BUILDAH_QUAY_REGISTRY}}/${{ matrix.source }}:master"
+            echo ::set-output name=buildah_tag::"${{ env.BUILDAH_QUAY_REGISTRY}}/${{ matrix.source }}:testing_master"
           fi
 
           if [ "${{ matrix.source }}" == "stable" ]; then
             VERSION=v"$(echo "${{ steps.sniff_test.outputs.version_output }}" | head -n 1 | awk '{print $2}')"
             # quay.io/buildah/stable:vX.X.X
-            echo ::set-output name=buildah_tag::"${{ env.BUILDAH_QUAY_REGISTRY}}/${{ matrix.source }}:${VERSION}"
+            echo ::set-output name=buildah_tag::"${{ env.BUILDAH_QUAY_REGISTRY}}/${{ matrix.source }}:testing_${VERSION}"
             # quay.io/contaners/buildah:vX.X.X
-            echo ::set-output name=containers_tag::"${{ env.CONTAINERS_QUAY_REGISTRY}}/buildah:${VERSION}"
+            echo ::set-output name=containers_tag::"${{ env.CONTAINERS_QUAY_REGISTRY}}/buildah:testing_${VERSION}"
           fi
 
           # have labels environment variable to use it in the further steps.
